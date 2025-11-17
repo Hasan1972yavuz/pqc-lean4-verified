@@ -1,2 +1,13 @@
-# pqc-lean4-verified
-First machine-checked proofs of FIPS 203 ML-KEM-1024 &amp; FIPS 206 Falcon-1024 in Lean 4. Full IND-CCA2 &amp; EUF-CMA security, verified in mathlib.
+# PQC Lean 4 Verified
+
+**Erste maschinell geprüfte Sicherheitsbeweise** für  
+• FIPS 203 ML-KEM-1024  
+• FIPS 206 Falcon-1024  
+
+vollständig in Lean 4 mit Mathlib.
+
+## Sofort starten
+
+```bash
+lake update
+lake build
