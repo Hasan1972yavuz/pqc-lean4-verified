@@ -1,5 +1,7 @@
 import MLKEM.Rounding
+import MLKEM.Message
 
 open MLKEM1024
 
-#check decompress_compress
+#check decompress_compress_bound
+#check decode_encode_message
