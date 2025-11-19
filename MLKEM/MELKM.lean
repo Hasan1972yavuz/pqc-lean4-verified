@@ -8,3 +8,6 @@ open MLKEM1024
 import MLKEM.Security
 
 #check ml_kem_1024_is_ind_cca2_secure
+import MLKEM.NTT
+
+#check MLKEM1024.ntt_intt_id
