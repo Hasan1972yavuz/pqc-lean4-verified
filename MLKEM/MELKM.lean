@@ -11,3 +11,6 @@ import MLKEM.Security
 import MLKEM.NTT
 
 #check MLKEM1024.ntt_intt_id
+import MLKEM.Core
+
+#check MLKEM1024.round_trip
