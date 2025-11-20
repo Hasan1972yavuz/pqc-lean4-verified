@@ -17,3 +17,8 @@ import MLKEM.Core
 import MLKEM.Full
 
 #check MLKEM1024.ml_kem_1024_ind_cca2_secure
+import MLKEM.Security
+import Falcon
+
+#check MLKEM1024.ml_kem_1024_ind_cca2_secure
+#check Falcon1024.falcon_euf_cma_secure
