@@ -14,3 +14,6 @@ import MLKEM.NTT
 import MLKEM.Core
 
 #check MLKEM1024.round_trip
+import MLKEM.Full
+
+#check MLKEM1024.ml_kem_1024_ind_cca2_secure
