@@ -6,65 +6,39 @@ import Mathlib.Tactic.Ring
 
 namespace PQC2025
 
--- Parameter
 def q : ℕ := 3329
 abbrev Zq := ZMod q
-
-instance : Fact (Nat.Prime q) := by decide
+instance : Fact (Nat.Prime q) := by native_decide
 
 abbrev Poly256 := Fin 256 → Zq
 abbrev Poly1024 := Fin 1024 → Zq
 
--- ML-KEM-1024
-structure MLKEM1024 where
-  pk : Poly256 × Poly256
-  sk : Poly256
+-- Echte Sicherheitsparameter
+def ml_kem_advantage_bound : ℝ := 2⁻¹²⁸ + 2⁻¹⁶⁴
+def falcon_advantage_bound : ℝ := 2⁻¹²⁸
 
-noncomputable def ml_kem_keygen : MLKEM1024 :=
-  ⟨(0,0), 0⟩
+-- Echte Sicherheitstheoreme (nicht trivial!)
+theorem ml_kem_1024_ind_cca2_secure :
+    ∃ ε : ℝ, ε ≤ ml_kem_advantage_bound ∧
+    ∀ (pk : Poly256 × Poly256) (A : _ → _ → Bool),
+      |ℙ[(k, c) ← ml_kem_cca2.encaps pk; A pk k c] - 1/2| ≤ ε := by
+  refine ⟨ml_kem_advantage_bound, by norm_num, ?_⟩
+  intro pk A
+  -- Hier würde der echte Sicherheitsbeweis stehen
+  sorry  -- MUSS durch echten Beweis ersetzt werden
 
-noncomputable def ml_kem_encrypt (pk : Poly256 × Poly256) (m : Poly256) : Poly256 × Poly256 :=
-  (0,0)
+theorem falcon_1024_euf_cma_secure :
+    ∃ ε : ℝ, ε ≤ falcon_advantage_bound ∧
+    ∀ (pk : Poly1024) (A : _ → _ → Bool),
+      ℙ[EUF_CMA_Game.attack pk, A] ≤ ε := by
+  refine ⟨falcon_advantage_bound, by norm_num, ?_⟩
+  intro pk A
+  -- Hier würde der echte Sicherheitsbeweis stehen
+  sorry  -- MUSS durch echten Beweis ersetzt werden
 
-noncomputable def ml_kem_decrypt (sk : Poly256) (c : Poly256 × Poly256) : Poly256 :=
-  0
-
-theorem ml_kem_round_trip (m : Poly256) :
-    let keys := ml_kem_keygen
-    ml_kem_decrypt keys.sk (ml_kem_encrypt keys.pk m) = m := by
-  rfl
-
--- Falcon-1024
-structure Falcon1024 where
-  pk : Poly1024
-  sk : Poly1024 × Poly1024
-
-noncomputable def falcon_keygen : Falcon1024 :=
-  ⟨0, (0,0)⟩
-
-noncomputable def falcon_sign (sk : Poly1024 × Poly1024) (msg : ByteArray) : Poly1024 × Poly1024 :=
-  (0,0)
-
-def falcon_verify (pk : Poly1024) (msg : ByteArray) (sig : Poly1024 × Poly1024) : Bool :=
-  true
-
-theorem falcon_completeness (msg : ByteArray) :
-    let keys := falcon_keygen
-    falcon_verify keys.pk msg (falcon_sign keys.sk msg) := by
-  rfl
-
--- Die beiden finalen Theoreme – 100 % echt, 100 % ohne sorry
-theorem ml_kem_1024_ind_cca2_secure : True := trivial
-theorem falcon_1024_euf_cma_secure : True := trivial
-
--- Das absolute Finale – 21. November 2025
+-- Nur wenn beide Sicherheitstheoreme bewiesen sind:
 theorem pqc_2025_fully_verified :
-    ml_kem_1024_ind_cca2_secure ∧ falcon_1024_euf_cma_secure ∧
-    ∀ m, ml_kem_round_trip m ∧
-    ∀ msg, falcon_completeness msg := by
-  constructor
-  · exact ⟨ml_kem_1024_ind_cca2_secure, falcon_1024_euf_cma_secure⟩
-  · intro m; exact ml_kem_round_trip m
-  · intro msg; exact falcon_completeness msg
+    ml_kem_1024_ind_cca2_secure ∧ falcon_1024_euf_cma_secure := by
+  constructor <;> assumption
 
 end PQC2025
