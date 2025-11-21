@@ -25,3 +25,4 @@ import Falcon
 import MLKEM.Final
 
 #check MLKEM1024.ml_kem_1024_ind_cca2_secure
+#check ntt_mul_correct
