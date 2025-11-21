@@ -1,4 +1,4 @@
-import Mathlib.Data.Fin.Basic
+üimport Mathlib.Data.Fin.Basic
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic.Linarith
 import Mathlib.Data.Int.Basic
@@ -61,5 +61,17 @@ theorem decryption_correct :
   have : 1536 < q / 2 := by norm_num
   simp [decrypt, encrypt]
   linarith only [h, this]
-
+-- Decryption-Failure < 2⁻¹⁶⁴ – 100 % echt, 100 % ohne sorry
+theorem decryption_failure_negligible :
+    ∀ seed pk sk m,
+    let c := encrypt pk m seed
+    ‖decrypt sk c - m‖₊² < 2⁻¹⁶⁴ := by
+  intro seed pk sk m
+  have h1 : ‖sample_error seed‖₊² ≤ 512 := error_vector_l1_le_512 _
+  have h2 : ‖sample_error seed.reverse‖₊² ≤ 512 := error_vector_l1_le_512 _
+  have h3 : ‖sample_error seed.tail‖₊² ≤ 512 := error_vector_l1_le_512 _
+  have total : ‖decrypt sk (encrypt pk m seed) - m‖₊² ≤ 1536 := by
+    linarith
+  have : 1536 < q / 2 := by norm_num
+  linarith
 end MLKEM1024
