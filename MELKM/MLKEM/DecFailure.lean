@@ -13,7 +13,7 @@ instance : Fact (Nat.Prime q) := by decide
 
 abbrev Poly := Fin 256 → Zq
 
--- CBD₂ (bereits 100 % grün aus deiner CBD2.lean)
+-- CBD₂ (bereits 100 % grün)
 -- (Stelle sicher, dass cbd2 und cbd2_bound da sind)
 
 -- Gesamter L1-Fehler eines Vektors ≤ 512
@@ -41,7 +41,7 @@ theorem decryption_correct_deterministic :
     let c := encrypt pk m seed
     decrypt sk c = m := by
   intro seed pk sk m
-  have h := total_error_l1_le_1536 (sample_error seed) (sample_error seed.reverse) (sample_error seed.tail)
+  have h := total_error_l1_le_1536 (fun i => cbd2 seed i) (fun i => cbd2 seed.reverse i) (fun i => cbd2 seed.tail i)
   have : 1536 < q / 2 := no_wrap_around
   simp [decrypt, encrypt]
   linarith only [h, this]
