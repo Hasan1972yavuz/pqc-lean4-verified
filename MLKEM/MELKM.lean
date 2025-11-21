@@ -33,3 +33,7 @@ import Falcon
 import PQC.FinalProof
 
 #check pqc_2025_fully_verified
+import MLKEM.CBD2
+
+#check MLKEM1024.cbd2_abs_le_two
+#check MLKEM1024.cbd2_variance_eq_one
