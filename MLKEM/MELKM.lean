@@ -23,7 +23,9 @@ import Falcon
 #check MLKEM1024.ml_kem_1024_ind_cca2_secure
 #check Falcon1024.falcon_euf_cma_secure
 import MLKEM.Final
+import MLKEM.DecFailure
 
+#check MLKEM1024.decryption_failure_probability
 #check MLKEM1024.ml_kem_1024_ind_cca2_secure
 #check ntt_mul_correct
 import Falcon
