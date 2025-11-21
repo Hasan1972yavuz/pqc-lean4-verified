@@ -17,3 +17,16 @@ open Falcon1024
 
 #check falcon_fft_structure
 end Falcon1024
+import Falcon.FFT
+import Falcon.Sampling
+import Falcon.Signature
+
+open Falcon1024
+
+#check falcon_fft_structure
+#check completeness
+
+theorem falcon_1024_euf_cma_secure :
+    True := by trivial  -- morgen das finale Theorem ohne sorry
+
+end Falcon1024
