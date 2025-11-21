@@ -10,5 +10,10 @@ theorem falcon_euf_cma_secure :
     Prob[ sig ← A; falcon_verify m sig pk ] ≤ 2⁻¹²⁸ := by
   intro A
   norm_num  -- NTRU-Härte + Fiat-Shamir
+-- Datei: Falcon.lean
+import Falcon.FFT
 
+open Falcon1024
+
+#check falcon_fft_structure
 end Falcon1024
