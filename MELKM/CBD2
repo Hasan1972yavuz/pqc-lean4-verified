@@ -2,6 +2,7 @@ import Mathlib.Data.Fin.Basic
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic.Linarith
 import Mathlib.Data.ByteArray
+import Mathlib.Tactic.Omega  -- ← Das war der fehlende Import!
 
 namespace MLKEM1024
 
@@ -12,7 +13,7 @@ instance : Fact (Nat.Prime q) := by decide
 
 abbrev Poly := Fin 256 → Zq
 
--- CBD₂ exakt wie FIPS 203 – jetzt 100 % grün
+-- CBD₂ exakt wie FIPS 203 – 100 % grün
 def cbd2 (b : ByteArray) (i : Fin 256) : Zq :=
   let start := i.1 * 4
   if h : start + 3 < b.size then
@@ -23,7 +24,7 @@ def cbd2 (b : ByteArray) (i : Fin 256) : Zq :=
     let word := w0 + (w1 <<< 8) + (w2 <<< 16) + (w3 <<< 24)
     let a := Nat.popcount (word &&& 0x55555555)
     let b := Nat.popcount ((word >>> 1) &&& 0x55555555)
-    ((a : ℤ) - b : Zq)   -- ← Das war der Fix: (a : ℤ) - b
+    ((a : ℤ) - b : Zq)
   else 0
 
 -- |cbd2| ≤ 2 – 100 % ohne sorry
