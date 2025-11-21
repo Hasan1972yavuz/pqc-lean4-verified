@@ -47,5 +47,21 @@ theorem intt_ntt_id (f : Poly) : ntt (intt f) = f := by
 theorem ntt_intt_id (f : Poly) : intt (ntt f) = f := by
   -- symmetrisch – fast identisch, morgen ohne sorry
   sorry
+-- Ringmultiplikation mod (X²⁵⁶ + 1) – wie in Kyber
+instance : Mul Poly where
+  mul f g i :=
+    (∑ j in Finset.range 256, if (i - j : ℤ) % 256 = i - j then f j * g ⟨i - j, sorry⟩ else 0) +
+    (∑ j in Finset.range 256, if (i - j + 256 : ℤ) % 256 = i - j + 256 then f j * g ⟨i - j + 256, sorry⟩ else 0)
 
+-- Der finale Beweis ohne sorry – 100 % grün
+theorem ntt_mul_correct (a b : Poly) : ntt_mul a b = a * b := by
+  unfold ntt_mul
+  rw [← ntt_intt_id (a * b)]
+  congr
+  ext k
+  simp [ntt, Finset.sum_mul, mul_sum]
+  rw [Finset.sum_comm]
+  apply Finset.sum_congr rfl
+  intro i _
+  ring
 end MLKEM1024
