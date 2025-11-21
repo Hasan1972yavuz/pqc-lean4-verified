@@ -30,3 +30,6 @@ import Falcon
 import Falcon
 
 #check Falcon1024.falcon_1024_fully_verified
+import PQC.FinalProof
+
+#check pqc_2025_fully_verified
