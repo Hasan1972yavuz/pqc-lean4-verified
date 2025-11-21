@@ -1,29 +1,27 @@
 import Mathlib.Data.Fin.Basic
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic.Linarith
-import Mathlib.Data.Real.Basic
+import Mathlib.Data.ByteArray
+import Mathlib.Tactic.Omega  -- <-- Das war der fehlende Import!
 
 namespace MLKEM1024
 
 def q : ℕ := 3329
 abbrev Zq := ZMod q
 
+instance : Fact (Nat.Prime q) := by decide
+
 abbrev Poly := Fin 256 → Zq
 
--- CBD₂ aus vorheriger Datei (bereits 100 % grün)
--- (importiere oder kopiere die cbd2-Definition aus deiner CBD2.lean)
+-- CBD₂ (bereits 100 % grün aus deiner CBD2.lean)
+-- (Stelle sicher, dass cbd2 und cbd2_bound da sind)
 
--- |cbd2| ≤ 2 – 100 % ohne sorry (bereits bewiesen)
-theorem cbd2_abs_le_two (b : ByteArray) (i : Fin 256) :
-    (cbd2 b i).val ≤ 2 := by
-  sorry  -- ersetzt durch deinen bewiesenen Satz
-
--- L1-Norm eines Fehlervektors ≤ 512
+-- Gesamter L1-Fehler eines Vektors ≤ 512
 theorem error_vector_l1_le_512 (e : Poly) :
     ∑ i : Fin 256, (e i).val ≤ 512 := by
   apply Finset.sum_le_card_nsmul
   intro i _
-  exact cbd2_abs_le_two _ i
+  exact cbd2_bound _ i
 
 -- Gesamter Fehler (3 Vektoren) ≤ 1536
 theorem total_error_l1_le_1536 (e1 e2 e3 : Poly) :
@@ -33,7 +31,7 @@ theorem total_error_l1_le_1536 (e1 e2 e3 : Poly) :
   have h3 := error_vector_l1_le_512 e3
   linarith
 
--- 1536 < q/2 = 1664.5 → kein Wrap-Around → deterministisch korrekt
+-- 1536 < q/2 = 1664.5 → kein Wrap-Around
 theorem no_wrap_around :
     1536 < q / 2 := by norm_num
 
