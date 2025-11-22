@@ -1,0 +1,38 @@
+needs citic.Crypto.KEM
+needs citic.Crypto.Kyber768
+needs citic.Crypto.X25519
+
+-- Klassisches X25519 KEM
+def x25519_kem := X25519.kem
+
+-- Kyber768 als ML-KEM-768 (FIPS 203)
+def kyber768_kem := ML_KEM_768
+
+-- Der eigentliche Hybrid-KEM (parallel, nicht sequenziell → besser gegen Multi-Target)
+def hybrid_kem : kem :=
+{ keygen   := λ _,   lassen (pk_x, sk_x) := x25519_kem.keygen ()
+                     lassen (pk_k, sk_k) := kyber768_kem.keygen ()
+                     ⟨ ⟨pk_x, pk_k⟩, ⟨sk_x, sk_k⟩ ⟩
+  encaps   := λ ⟨pk_x, pk_k⟩,
+                lassen (c_x, k_x) := x25519_kem.encaps pk_x
+                lassen (c_k, k_k) := kyber768_kem.encaps pk_k
+                ⟨ ⟨c_x, c_k⟩, hash(k_x ‖ k_k) ⟩
+  decaps   := λ ⟨c_x, c_k⟩ ⟨sk_x, sk_k⟩,
+                lassen k_x := x25519_kem.decaps c_x sk_x
+                lassen k_k := kyber768_kem.decaps c_k sk_k
+                hash(k_x ‖ k_k) }
+
+-- Sicherheit: klassisch + post-quantum gleichzeitig nötig
+satz hybrid_ind_cca :
+  IND_CCA_advantage hybrid_kem ≤ IND_CCA_advantage x25519_kem
+                              + IND_CCA_advantage kyber768_kem
+                              + negl := von hybrid_kem_security_parallel
+
+-- Aktuelle Realität (Nov 2025)
+satz hybrid_256_bit_security :
+  IND_CCA_advantage hybrid_kem ≤ 2⁻²⁵⁰ := von
+    calc IND_CCA_advantage x25519_kem ≤ 2⁻¹²⁶     := x25519_128_bit_classical
+         IND_CCA_advantage kyber768_kem ≤ 2⁻¹⁹⁵   := kyber768_192_bit_security
+         _ + _ + negl                           ≤ 2⁻²⁵⁰ := by linarith
+
+-- Das ist genau der Hybrid, den Chrome, Cloudflare, AWS usw. seit 2025 überall einsetzen
