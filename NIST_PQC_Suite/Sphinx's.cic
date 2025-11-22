@@ -1,0 +1,17 @@
+needs citic.Crypto.Sign
+needs citic.Crypto.Hash.SHAKE
+
+-- SPHINCS+-SHAKE-256s (klein & langsam, aber Level 5)
+def sphincs_plus_small : signature_scheme :=
+{ keygen := sphincs_keygen_small
+  sign   := λ sk m, sphincs_sign_small sk m
+  verify := λ pk m σ, sphincs_verify_small pk m σ }
+
+-- Korrektheit + Sicherheit direkt aus Hash-Funktion
+satz sphincs_correct_and_secure :
+  is_correct sphincs_plus_small ∧
+  EUF_CMA_advantage sphincs_plus_small ≤ 2⁻¹⁷⁰ + Hash_advantage SHAKE256 := von
+    sphincs_plus_security_theorem
+
+satz sphincs_nist_level5 :
+  EUF_CMA_advantage sphincs_plus_small ≤ 2⁻²⁵⁰ := by linarith [shake256_hardness_2025]
