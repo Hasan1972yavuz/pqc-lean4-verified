@@ -3,7 +3,7 @@
 
 - Full IND-CCA2 security of ML-KEM-1024
 - Full EUF-CMA security of Falcon-1024
-- All proofs verified with `lake build` – no sorry
+  alles Illusion nur Gedanke nicht echt 
 ## Sofort starten
 
 ```bash
