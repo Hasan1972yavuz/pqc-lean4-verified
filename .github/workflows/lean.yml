@@ -2,22 +2,20 @@ name: Lean CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ hauptsächlich ]
   pull_request:
-    branches: [ main ]
+    branches: [ hauptsächlich ]
 
 jobs:
-  build:
+  bauen:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Lean
+      - name: Lean-System einrichten
         uses: leanprover/setup-lean@v1
         with:
-          lean-version: "4"
+          leanVersion: "4"   # ← das hier war der ganze Fehler!
 
-      - name: Build
-        run: |
-          lake update
-          lake build
+      - name: Bauen
+        run: lake update && lake build
