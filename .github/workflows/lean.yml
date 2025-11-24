@@ -1,1 +1,14 @@
-- uses: leanprover/lean4-action@v1
+name: Lean CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean4-action@v1
+        with:
+          lake-build: true
+          # Diese Zeile war der entscheidende Fix:
+          package: pqc-lean4-verified
